@@ -1,0 +1,7 @@
+cast_service:
+  image:
+    repository: alba3838/cast-service-1
+    tag: latest
+  ports:
+    - name: http
+      containerPort: 8000

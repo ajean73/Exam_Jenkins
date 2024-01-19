@@ -1,0 +1,15 @@
+movie_db:
+  image:
+    repository: postgres:12.1-alpine
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 1Gi
+
+cast_db:
+  image:
+    repository: postgres:12.1-alpine
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 1Gi

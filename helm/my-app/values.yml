@@ -1,0 +1,32 @@
+# ./helm/my_app/values.yml
+movie_service:
+  image:
+    repository: alba3838/movie-service-1
+    tag: latest
+  ports:
+    - name: http
+      containerPort: 8000
+
+cast_service:
+  image:
+    repository: alba3838/cast-service-1
+    tag: latest
+  ports:
+    - name: http
+      containerPort: 8000
+
+movie_db:
+  image:
+    repository: postgres:12.1-alpine
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 1Gi
+
+cast_db:
+  image:
+    repository: postgres:12.1-alpine
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 1Gi
