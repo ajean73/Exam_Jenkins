@@ -65,24 +65,22 @@ pipeline {
         stage('Deploy Movie Service in Prod') {
             steps {
                 script {
+                    // Create an Approval Button with a timeout of 15 minutes.
+                    // This requires manual validation to deploy on the production environment
+                    timeout(time: 15, unit: "MINUTES") {
+                        input message: 'Do you want to deploy in production ?', ok: 'Yes'
+                    }
+
                     sh '''
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
                         cp helm/my-app/values/values-movie.yml values.yml
                         sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                    '''
-                }
-            }
-            input(message: 'Do you want to deploy in production ?', ok: 'Yes')
-            steps {
-                script {
-                    sh '''
                         helm upgrade --install movie-service helm/my-app --values=values.yml --namespace prod
                     '''
                 }
             }
         }
-
     }
 }
