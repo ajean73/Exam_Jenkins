@@ -199,7 +199,7 @@ pipeline {
             }
 
             when {
-                branch 'master'
+                branch 'masterr'
             }
 
             steps {
@@ -225,7 +225,7 @@ pipeline {
 
             when {
               expression {
-                env.BRANCH_NAME == 'master'
+                env.BRANCH_NAME == 'masterr'
                 }
             }
 
