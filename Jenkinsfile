@@ -107,7 +107,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service ./movie --values=./movie/values.yaml --set image.tag=${DOCKER_TAG} --namespace dev
+                        helm upgrade --install movie-service ./movie-helm --values=./movie-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace dev
                     """
                 }
             }
@@ -123,7 +123,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install cast-service ./cast --values=./cast/values.yaml --set image.tag=${DOCKER_TAG} --namespace dev
+                        helm upgrade --install cast-service ./cast-helm --values=./cast-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace dev
                     """
                 }
             }
@@ -139,7 +139,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service ./movie --values=./movie/values.yaml --set image.tag=${DOCKER_TAG} --namespace qa
+                        helm upgrade --install movie-service ./movie-helm --values=./movie-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace qa
                     """
                 }
             }
@@ -155,7 +155,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install cast-service ./cast --values=./cast/values.yaml --set image.tag=${DOCKER_TAG} --namespace qa
+                        helm upgrade --install cast-service ./cast-helm --values=./cast-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace qa
                     """
                 }
             }
@@ -171,7 +171,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service ./movie --values=./movie/values.yaml --set image.tag=${DOCKER_TAG} --namespace staging
+                        helm upgrade --install movie-service ./movie-helm --values=./movie-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace staging
                     """
                 }
             }
@@ -187,7 +187,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install cast-service ./cast --values=./cast/values.yaml --set image.tag=${DOCKER_TAG} --namespace staging
+                        helm upgrade --install cast-service ./cast-helm --values=./cast-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace staging
                     """
                 }
             }
@@ -207,7 +207,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service ./movie --values=./movie/values.yaml --set image.tag=${DOCKER_TAG} --namespace prod
+                        helm upgrade --install movie-service ./movie-helm --values=./movie-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace prod
                     """
                 }
             }
@@ -227,7 +227,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install cast-service ./cast --values=./cast/values.yaml --set image.tag=${DOCKER_TAG} --namespace prod
+                        helm upgrade --install cast-service ./cast-helm --values=./cast-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace prod
                     """
                 }
             }
