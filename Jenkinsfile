@@ -26,61 +26,81 @@ pipeline {
             }
         }
 
-        script {
-            // Function to deploy Movie Service
-            def deployMovieService(String namespace) {
-                sh '''
-                    rm -Rf .kube
-                    mkdir .kube
-                    cat $KUBECONFIG > .kube/config
-                    helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace ${namespace}
-                '''
-            }
-
-            // Function to deploy Cast Service
-            def deployCastService(String namespace) {
-                sh '''
-                    rm -Rf .kube
-                    mkdir .kube
-                    cat $KUBECONFIG > .kube/config
-                    helm upgrade --install cast-service helm/my-app --values=helm/my-app/values/values-cast.yml --set cast_service.image.tag=${DOCKER_TAG} --namespace ${namespace}
-                '''
-            }
-        }
-
         stage('Deploy Movie Service in Dev') {
             steps {
-                deployMovieService('dev')
+                script {
+                    sh '''
+                        rm -Rf .kube
+                        mkdir .kube
+                        cat $KUBECONFIG > .kube/config
+                        helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace dev
+                    '''
+                }
             }
         }
 
         stage('Deploy Cast Service in Dev') {
             steps {
-                deployCastService('dev')
+                script {
+                    sh '''
+                        rm -Rf .kube
+                        mkdir .kube
+                        cat $KUBECONFIG > .kube/config
+                        helm upgrade --install cast-service helm/my-app --values=helm/my-app/values/values-cast.yml --set cast_service.image.tag=${DOCKER_TAG} --namespace dev
+                    '''
+                }
             }
         }
 
         stage('Deploy Movie Service in QA') {
             steps {
-                deployMovieService('qa')
+                script {
+                    sh '''
+                        rm -Rf .kube
+                        mkdir .kube
+                        cat $KUBECONFIG > .kube/config
+                        helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace qa
+                    '''
+                }
             }
         }
 
         stage('Deploy Cast Service in QA') {
             steps {
-                deployCastService('qa')
+                script {
+                    sh '''
+                        rm -Rf .kube
+                        mkdir .kube
+                        cat $KUBECONFIG > .kube/config
+                        helm upgrade --install cast-service helm/my-app --values=helm/my-app/values/values-cast.yml --set cast_service.image.tag=${DOCKER_TAG} --namespace qa
+                    '''
+                }
             }
         }
 
         stage('Deploy Movie Service in Staging') {
             steps {
-                deployMovieService('staging')
+                script {
+                    sh '''
+                        rm -Rf .kube
+                        mkdir .kube
+                        cat $KUBECONFIG > .kube/config
+                        helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace staging
+                    '''
+                }
             }
         }
 
         stage('Deploy Cast Service in Staging') {
             steps {
-                deployCastService('staging')
+                script {
+                    sh '''
+                        rm -Rf .kube
+                        mkdir .kube
+                        cat $KUBECONFIG > .kube/config
+                        helm upgrade --install cast-service helm/my-app --values=helm/my-app/values/values-cast.yml --set cast_service.image.tag=${DOCKER_TAG} --namespace staging
+                    '''
+                }
             }
         }
 
@@ -93,7 +113,12 @@ pipeline {
                         input message: 'Do you want to deploy Movie Service in production ?', ok: 'Yes'
                     }
 
-                    deployMovieService('prod')
+                    sh '''
+                        rm -Rf .kube
+                        mkdir .kube
+                        cat $KUBECONFIG > .kube/config
+                        helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace prod
+                    '''
                 }
             }
         }
@@ -107,7 +132,12 @@ pipeline {
                         input message: 'Do you want to deploy Cast Service in production ?', ok: 'Yes'
                     }
 
-                    deployCastService('prod')
+                    sh '''
+                        rm -Rf .kube
+                        mkdir .kube
+                        cat $KUBECONFIG > .kube/config
+                        helm upgrade --install cast-service helm/my-app --values=helm/my-app/values/values-cast.yml --set cast_service.image.tag=${DOCKER_TAG} --namespace prod
+                    '''
                 }
             }
         }
