@@ -187,4 +187,137 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install cast-service ./cast-helm --values=./cast-helm/values.yaml --set image.tag=${
+                        helm upgrade --install cast-service ./cast-helm --values=./cast-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace staging
+                    """
+                }
+            }
+        }
+
+        stage('Deploy Cast Service in Staging') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }
+            steps {
+                script {
+                    sh """
+                        rm -Rf .kube
+                        mkdir .kube
+                        cat $KUBECONFIG > .kube/config
+                        helm upgrade --install cast-service ./cast-helm --values=./cast-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace staging
+                    """
+                }
+            }
+        }
+
+        stage('Deploy Movie Service in Prod') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }
+
+            when {
+                branch 'master'
+            }
+
+            steps {
+                script {
+                    def currentBranch = env.BRANCH_NAME
+                    echo "Current branch: $currentBranch"
+
+                    if (currentBranch == 'master') {
+                        timeout(time: 15, unit: "MINUTES") {
+                            input message: 'Do you want to deploy Movie Service in production ?', ok: 'Yes'
+                        }
+
+                        sh """
+                            rm -Rf .kube
+                            mkdir .kube
+                            cat $KUBECONFIG > .kube/config
+                            helm upgrade --install movie-service ./movie-helm --values=./movie-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace staging
+                    """
+                }
+            }
+        }
+
+        stage('Deploy Cast Service in Staging') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }
+            steps {
+                script {
+                    sh """
+                        rm -Rf .kube
+                        mkdir .kube
+                        cat $KUBECONFIG > .kube/config
+                        helm upgrade --install cast-service ./cast-helm --values=./cast-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace staging
+                    """
+                }
+            }
+        }
+
+        stage('Deploy Movie Service in Prod') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }
+
+            when {
+                branch 'master'
+            }
+
+            steps {
+                script {
+                    def currentBranch = env.BRANCH_NAME
+                    echo "Current branch: $currentBranch"
+
+                    if (currentBranch == 'master') {
+                        timeout(time: 15, unit: "MINUTES") {
+                            input message: 'Do you want to deploy Movie Service in production ?', ok: 'Yes'
+                        }
+
+                        sh """
+                            rm -Rf .kube
+                            mkdir .kube
+                            cat $KUBECONFIG > .kube/config
+                            helm upgrade --install movie-service ./movie-helm --values=./movie-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace prod
+                        """
+                    } else {
+                        echo "Not deploying Movie Service in production as the branch is not 'master'."
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Cast Service in Prod') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }
+
+            when {
+                branch 'master'
+            }
+
+            steps {
+                script {
+                    def currentBranch = env.BRANCH_NAME
+                    echo "Current branch: $currentBranch"
+
+                    if (currentBranch == 'master') {
+                        timeout(time: 15, unit: "MINUTES") {
+                            input message: 'Do you want to deploy Cast Service in production ?', ok: 'Yes'
+                        }
+
+                        sh """
+                            rm -Rf .kube
+                            mkdir .kube
+                            cat $KUBECONFIG > .kube/config
+                            helm upgrade --install cast-service ./cast-helm --values=./cast-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace prod
+                        """
+                    } else {
+                        echo "Not deploying Cast Service in production as the branch is not 'master'."
+                    }
+                }
+            }
+        }
+    }
+}
+
+
