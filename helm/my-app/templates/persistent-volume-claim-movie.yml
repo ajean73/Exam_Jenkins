@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}-movie-db-pvc
 spec:
   accessModes:
-    - {{ default "ReadWriteOnce" $movieDb.persistence.accessMode }}
+    - {{ default "ReadWriteOnce" .Values.movie_db.persistence.accessMode }}
   resources:
     requests:
-      storage: {{ default "1Gi" $movieDb.persistence.size }}
+      storage: {{ default "1Gi" .Values.movie_db.persistence.size }}
