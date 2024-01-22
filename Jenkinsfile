@@ -199,7 +199,7 @@ pipeline {
             }
 
             when {
-                expression { BRANCH_NAME == 'master' }
+                branch 'master'
             }
 
             steps {
@@ -224,7 +224,7 @@ pipeline {
             }
 
             when {
-                expression { BRANCH_NAME == 'master' }
+                branch 'master'
             }
 
             steps {
