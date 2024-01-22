@@ -30,6 +30,8 @@ pipeline {
             steps {
                 script {
                     sh '''
+                        rm helm/my-app/templates/persistent-volume-claim-cast.yml
+                        rm helm/my-app/templates/persistent-volume-claim-movie.yml
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
