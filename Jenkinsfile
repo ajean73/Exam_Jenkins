@@ -194,6 +194,10 @@ pipeline {
         }
 
         stage('Deploy Movie Service in Prod') {
+            when {
+                branch 'master'
+            }
+
             environment {
                 KUBECONFIG = credentials("config")
             }
