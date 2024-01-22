@@ -197,6 +197,11 @@ pipeline {
             environment {
                 KUBECONFIG = credentials("config")
             }
+
+            when {
+                expression { BRANCH_NAME == 'master' }
+            }
+
             steps {
                 script {
                     timeout(time: 15, unit: "MINUTES") {
@@ -217,6 +222,11 @@ pipeline {
             environment {
                 KUBECONFIG = credentials("config")
             }
+
+            when {
+                expression { BRANCH_NAME == 'master' }
+            }
+
             steps {
                 script {
                     timeout(time: 15, unit: "MINUTES") {
