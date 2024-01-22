@@ -26,8 +26,9 @@ pipeline {
             }
         }
 
-        def deployMovieService(String namespace) {
-            script {
+        script {
+            // Function to deploy Movie Service
+            def deployMovieService(String namespace) {
                 sh '''
                     rm -Rf .kube
                     mkdir .kube
@@ -35,10 +36,9 @@ pipeline {
                     helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace ${namespace}
                 '''
             }
-        }
 
-        def deployCastService(String namespace) {
-            script {
+            // Function to deploy Cast Service
+            def deployCastService(String namespace) {
                 sh '''
                     rm -Rf .kube
                     mkdir .kube
