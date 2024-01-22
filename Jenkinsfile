@@ -198,9 +198,9 @@ pipeline {
                 KUBECONFIG = credentials("config")
             }
 
-            when {
-                branch 'masterr'
-            }
+            // when {
+            //    branch 'master'
+            // }
 
             steps {
                 script {
@@ -223,11 +223,10 @@ pipeline {
                 KUBECONFIG = credentials("config")
             }
 
-            when {
-              expression {
-                env.BRANCH_NAME == 'masterr'
-                }
-            }
+
+            // when {
+            //    branch 'master'
+            // }
 
             steps {
                 script {
