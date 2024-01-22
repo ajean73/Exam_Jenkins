@@ -24,7 +24,9 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service helm/my-app --set movie_service.image.tag=${DOCKER_TAG} --namespace dev
+                        cp helm/my-app/values/values-movie.yml values.yml
+                        sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                        helm upgrade --install movie-service helm/my-app --values=values.yml --namespace dev
                     '''
                 }
             }
@@ -37,7 +39,9 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service helm/my-app --set movie_service.image.tag=${DOCKER_TAG} --namespace qa
+                        cp helm/my-app/values/values-movie.yml values.yml
+                        sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                        helm upgrade --install movie-service helm/my-app --values=values.yml --namespace qa
                     '''
                 }
             }
@@ -50,7 +54,9 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service helm/my-app --set movie_service.image.tag=${DOCKER_TAG} --namespace staging
+                        cp helm/my-app/values/values-movie.yml values.yml
+                        sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                        helm upgrade --install movie-service helm/my-app --values=values.yml --namespace staging
                     '''
                 }
             }
@@ -69,7 +75,9 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service helm/my-app --set movie_service.image.tag=${DOCKER_TAG} --namespace prod
+                        cp helm/my-app/values/values-movie.yml values.yml
+                        sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                        helm upgrade --install movie-service helm/my-app --values=values.yml --namespace prod
                     '''
                 }
             }

@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}-cast-db-pvc
 spec:
   accessModes:
-    - {{ .Values.cast_db.persistence.accessMode }}
+    - {{ $castDb := default dict .Values.cast_db }}{{ default "ReadWriteOnce" $castDb.persistence.accessMode }}
   resources:
     requests:
-      storage: {{ .Values.cast_db.persistence.size }}
+      storage: {{ $castDb.persistence.size | default "1Gi" }}
