@@ -223,7 +223,6 @@ pipeline {
                 KUBECONFIG = credentials("config")
             }
 
-
             // when {
             //    branch 'master'
             // }
