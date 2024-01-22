@@ -9,7 +9,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Docker Build Movie Service') { // Je construis l'image Docker du service Movie
+        stage('Docker Build Movie Service') {
             steps {
                 script {
                     sh """
@@ -20,7 +20,7 @@ pipeline {
             }
         }
 
-        stage('Docker run Movie Service') { // Je lance le conteneur Docker du service Movie
+        stage('Docker run Movie Service') {
             steps {
                 script {
                     sh """
@@ -42,7 +42,7 @@ pipeline {
             }
         }
 
-        stage('Docker Push Movie Service') { // Je pousse l'image sur DockerHub
+        stage('Docker Push Movie Service') {
             steps {
                 script {
                     sh """
@@ -53,7 +53,7 @@ pipeline {
             }
         }
 
-        stage('Docker Build Cast Service') { // Je construis l'image Docker du service Cast
+        stage('Docker Build Cast Service') {
             steps {
                 script {
                     sh """
@@ -64,7 +64,7 @@ pipeline {
             }
         }
 
-        stage('Docker run Cast Service') { // Je lance le conteneur Docker du service Cast
+        stage('Docker run Cast Service') {
             steps {
                 script {
                     sh """
@@ -86,7 +86,7 @@ pipeline {
             }
         }
 
-        stage('Docker Push Cast Service') { // Je pousse l'image sur DockerHub
+        stage('Docker Push Cast Service') {
             steps {
                 script {
                     sh """
@@ -187,62 +187,4 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install cast-service ./cast-helm --values=./cast-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace staging
-                    """
-                }
-            }
-        }
-
-        stage('Deploy Movie Service in Prod') {
-            environment {
-                KUBECONFIG = credentials("config")
-            }
-
-            when {
-                branch 'master'
-            }
-
-            steps {
-                script {
-                    timeout(time: 15, unit: "MINUTES") {
-                        input message: 'Do you want to deploy in production ?', ok: 'Yes'
-                    }
-
-                    sh """
-                        rm -Rf .kube
-                        mkdir .kube
-                        cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service ./movie-helm --values=./movie-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace prod
-                    """
-                }
-            }
-        }
-
-        stage('Deploy Cast Service in Prod') {
-            environment {
-                KUBECONFIG = credentials("config")
-            }
-
-            when {
-              expression {
-                env.BRANCH_NAME == 'master'
-                }
-            }
-
-            steps {
-                script {
-                    timeout(time: 15, unit: "MINUTES") {
-                        input message: 'Do you want to deploy in production ?', ok: 'Yes'
-                    }
-
-                    sh """
-                        rm -Rf .kube
-                        mkdir .kube
-                        cat $KUBECONFIG > .kube/config
-                        helm upgrade --install cast-service ./cast-helm --values=./cast-helm/values.yaml --set image.tag=${DOCKER_TAG} --namespace prod
-                    """
-                }
-            }
-        }
-    }
-}
+                        helm upgrade --install cast-service ./cast-helm --values=./cast-helm/values.yaml --set image.tag=${
