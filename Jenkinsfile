@@ -224,7 +224,9 @@ pipeline {
             }
 
             when {
-                branch 'master'
+              expression {
+                env.BRANCH_NAME == 'master'
+                }
             }
 
             steps {
