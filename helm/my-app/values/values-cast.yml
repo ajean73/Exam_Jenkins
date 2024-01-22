@@ -5,3 +5,8 @@ cast_service:
   ports:
     - name: http
       containerPort: 8000
+
+cast_db:
+  persistence:
+    accessMode: ReadWriteOnce
+    size: 1Gi
