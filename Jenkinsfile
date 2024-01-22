@@ -33,7 +33,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace dev --reset-values
+                        helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace dev --reset-values --exclude "persistent-volume-claim-cast.yml" --exclude "persistent-volume-claim-movie.yml"
                     '''
                 }
             }
