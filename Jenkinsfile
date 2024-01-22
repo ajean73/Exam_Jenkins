@@ -193,6 +193,7 @@ pipeline {
             }
         }
 
+
         stage('Deploy Movie Service in Prod') {
             environment {
                 KUBECONFIG = credentials("config")
@@ -217,6 +218,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Deploy Cast Service in Prod') {
             environment {
