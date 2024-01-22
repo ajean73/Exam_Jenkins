@@ -5,3 +5,8 @@ movie_service:
   ports:
     - name: http
       containerPort: 8000
+
+movie_db:
+  persistence:
+    accessMode: ReadWriteOnce
+    size: 1Gi
