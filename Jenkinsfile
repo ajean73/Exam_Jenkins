@@ -9,7 +9,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Docker Build Movie Service') {
+        stage('Docker Build Movie Service') { // Je construis l'image Docker du service Movie
             steps {
                 script {
                     sh """
@@ -20,7 +20,7 @@ pipeline {
             }
         }
 
-        stage('Docker run Movie Service') {
+        stage('Docker run Movie Service') { // Je lance le conteneur Docker du service Movie
             steps {
                 script {
                     sh """
@@ -42,7 +42,7 @@ pipeline {
             }
         }
 
-        stage('Docker Push Movie Service') {
+        stage('Docker Push Movie Service') { // Je pousse l'image sur DockerHub
             steps {
                 script {
                     sh """
@@ -53,7 +53,7 @@ pipeline {
             }
         }
 
-        stage('Docker Build Cast Service') {
+        stage('Docker Build Cast Service') { // Je construis l'image Docker du service Cast
             steps {
                 script {
                     sh """
@@ -64,7 +64,7 @@ pipeline {
             }
         }
 
-        stage('Docker run Cast Service') {
+        stage('Docker run Cast Service') { // Je lance le conteneur Docker du service Cast
             steps {
                 script {
                     sh """
@@ -86,7 +86,7 @@ pipeline {
             }
         }
 
-        stage('Docker Push Cast Service') {
+        stage('Docker Push Cast Service') { // Je pousse l'image sur DockerHub
             steps {
                 script {
                     sh """
