@@ -30,10 +30,12 @@ pipeline {
             steps {
                 script {
                     sh '''
+                        rm helm/my-app/templates/persistent-volume-claim-cast.yml
+                        rm helm/my-app/templates/persistent-volume-claim-movie.yml
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service ./movie --values=./movie/values.yaml --set image.tag=${DOCKER_TAG} --namespace dev
+                        helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace dev
                     '''
                 }
             }
@@ -46,7 +48,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install cast-service ./cast --values=./cast/values.yaml --set image.tag=${DOCKER_TAG} --namespace dev
+                        helm upgrade --install cast-service helm/my-app --values=helm/my-app/values/values-cast.yml --set cast_service.image.tag=${DOCKER_TAG} --namespace dev
                     '''
                 }
             }
@@ -59,7 +61,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service ./movie --values=./movie/values.yaml --set image.tag=${DOCKER_TAG} --namespace qa
+                        helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace qa
                     '''
                 }
             }
@@ -72,7 +74,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install cast-service ./cast --values=./cast/values.yaml --set image.tag=${DOCKER_TAG} --namespace qa
+                        helm upgrade --install cast-service helm/my-app --values=helm/my-app/values/values-cast.yml --set cast_service.image.tag=${DOCKER_TAG} --namespace qa
                     '''
                 }
             }
@@ -85,7 +87,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service ./movie --values=./movie/values.yaml --set image.tag=${DOCKER_TAG} --namespace staging
+                        helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace staging
                     '''
                 }
             }
@@ -98,7 +100,7 @@ pipeline {
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install cast-service ./cast --values=./cast/values.yaml --set image.tag=${DOCKER_TAG} --namespace staging
+                        helm upgrade --install cast-service helm/my-app --values=helm/my-app/values/values-cast.yml --set cast_service.image.tag=${DOCKER_TAG} --namespace staging
                     '''
                 }
             }
@@ -110,14 +112,14 @@ pipeline {
                     // Create an Approval Button with a timeout of 15 minutes.
                     // This requires manual validation to deploy on the production environment
                     timeout(time: 15, unit: "MINUTES") {
-                        input message: 'Do you want to deploy in production ?', ok: 'Yes'
+                        input message: 'Do you want to deploy Movie Service in production ?', ok: 'Yes'
                     }
 
                     sh '''
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install movie-service ./movie --values=./movie/values.yaml --set image.tag=${DOCKER_TAG} --namespace prod
+                        helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace prod
                     '''
                 }
             }
@@ -129,14 +131,14 @@ pipeline {
                     // Create an Approval Button with a timeout of 15 minutes.
                     // This requires manual validation to deploy on the production environment
                     timeout(time: 15, unit: "MINUTES") {
-                        input message: 'Do you want to deploy in production ?', ok: 'Yes'
+                        input message: 'Do you want to deploy Cast Service in production ?', ok: 'Yes'
                     }
 
                     sh '''
                         rm -Rf .kube
                         mkdir .kube
                         cat $KUBECONFIG > .kube/config
-                        helm upgrade --install cast-service ./cast --values=./cast/values.yaml --set image.tag=${DOCKER_TAG} --namespace prod
+                        helm upgrade --install cast-service helm/my-app --values=helm/my-app/values/values-cast.yml --set cast_service.image.tag=${DOCKER_TAG} --namespace prod
                     '''
                 }
             }
