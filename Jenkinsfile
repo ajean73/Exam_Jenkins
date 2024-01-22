@@ -27,6 +27,9 @@ pipeline {
         }
 
         stage('Deploy Movie Service in Dev') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }
             steps {
                 script {
                     sh '''
@@ -40,6 +43,9 @@ pipeline {
         }
 
         stage('Deploy Cast Service in Dev') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }
             steps {
                 script {
                     sh '''
@@ -53,6 +59,9 @@ pipeline {
         }
 
         stage('Deploy Movie Service in QA') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }            
             steps {
                 script {
                     sh '''
@@ -66,6 +75,9 @@ pipeline {
         }
 
         stage('Deploy Cast Service in QA') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }            
             steps {
                 script {
                     sh '''
@@ -79,6 +91,9 @@ pipeline {
         }
 
         stage('Deploy Movie Service in Staging') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }            
             steps {
                 script {
                     sh '''
@@ -92,6 +107,9 @@ pipeline {
         }
 
         stage('Deploy Cast Service in Staging') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }            
             steps {
                 script {
                     sh '''
@@ -105,6 +123,9 @@ pipeline {
         }
 
         stage('Deploy Movie Service in Prod') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }            
             steps {
                 script {
                     // Create an Approval Button with a timeout of 15 minutes.
@@ -124,6 +145,9 @@ pipeline {
         }
 
         stage('Deploy Cast Service in Prod') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }            
             steps {
                 script {
                     // Create an Approval Button with a timeout of 15 minutes.
