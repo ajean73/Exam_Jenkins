@@ -17,48 +17,70 @@ pipeline {
             }
         }
 
-        stage('Deploy Movie Service in Dev') {
+        stage('Build and Push Cast Service') {
             steps {
                 script {
-                    sh '''
-                        rm -Rf .kube
-                        mkdir .kube
-                        cat $KUBECONFIG > .kube/config
-                        cp helm/my-app/values/values-movie.yml values.yml
-                        sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                        helm upgrade --install movie-service helm/my-app --values=values.yml --namespace dev
-                    '''
+                    sh "docker build -t $DOCKER_ID/cast-service-1:$DOCKER_TAG ./cast-service"
+                    sh "docker push $DOCKER_ID/cast-service-1:$DOCKER_TAG"
                 }
+            }
+        }
+
+        def deployMovieService(String namespace) {
+            script {
+                sh '''
+                    rm -Rf .kube
+                    mkdir .kube
+                    cat $KUBECONFIG > .kube/config
+                    helm upgrade --install movie-service helm/my-app --values=helm/my-app/values/values-movie.yml --set movie_service.image.tag=${DOCKER_TAG} --namespace ${namespace}
+                '''
+            }
+        }
+
+        def deployCastService(String namespace) {
+            script {
+                sh '''
+                    rm -Rf .kube
+                    mkdir .kube
+                    cat $KUBECONFIG > .kube/config
+                    helm upgrade --install cast-service helm/my-app --values=helm/my-app/values/values-cast.yml --set cast_service.image.tag=${DOCKER_TAG} --namespace ${namespace}
+                '''
+            }
+        }
+
+        stage('Deploy Movie Service in Dev') {
+            steps {
+                deployMovieService('dev')
+            }
+        }
+
+        stage('Deploy Cast Service in Dev') {
+            steps {
+                deployCastService('dev')
             }
         }
 
         stage('Deploy Movie Service in QA') {
             steps {
-                script {
-                    sh '''
-                        rm -Rf .kube
-                        mkdir .kube
-                        cat $KUBECONFIG > .kube/config
-                        cp helm/my-app/values/values-movie.yml values.yml
-                        sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                        helm upgrade --install movie-service helm/my-app --values=values.yml --namespace qa
-                    '''
-                }
+                deployMovieService('qa')
+            }
+        }
+
+        stage('Deploy Cast Service in QA') {
+            steps {
+                deployCastService('qa')
             }
         }
 
         stage('Deploy Movie Service in Staging') {
             steps {
-                script {
-                    sh '''
-                        rm -Rf .kube
-                        mkdir .kube
-                        cat $KUBECONFIG > .kube/config
-                        cp helm/my-app/values/values-movie.yml values.yml
-                        sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                        helm upgrade --install movie-service helm/my-app --values=values.yml --namespace staging
-                    '''
-                }
+                deployMovieService('staging')
+            }
+        }
+
+        stage('Deploy Cast Service in Staging') {
+            steps {
+                deployCastService('staging')
             }
         }
 
@@ -68,17 +90,24 @@ pipeline {
                     // Create an Approval Button with a timeout of 15 minutes.
                     // This requires manual validation to deploy on the production environment
                     timeout(time: 15, unit: "MINUTES") {
-                        input message: 'Do you want to deploy in production ?', ok: 'Yes'
+                        input message: 'Do you want to deploy Movie Service in production ?', ok: 'Yes'
                     }
 
-                    sh '''
-                        rm -Rf .kube
-                        mkdir .kube
-                        cat $KUBECONFIG > .kube/config
-                        cp helm/my-app/values/values-movie.yml values.yml
-                        sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                        helm upgrade --install movie-service helm/my-app --values=values.yml --namespace prod
-                    '''
+                    deployMovieService('prod')
+                }
+            }
+        }
+
+        stage('Deploy Cast Service in Prod') {
+            steps {
+                script {
+                    // Create an Approval Button with a timeout of 15 minutes.
+                    // This requires manual validation to deploy on the production environment
+                    timeout(time: 15, unit: "MINUTES") {
+                        input message: 'Do you want to deploy Cast Service in production ?', ok: 'Yes'
+                    }
+
+                    deployCastService('prod')
                 }
             }
         }
